@@ -1,6 +1,6 @@
-#  DDoS Attack Simulation with Mininet
+# DDoS Attack Simulation with Mininet
 
-Wirtten By Drake Lambert
+Written By Drake Lambert
 
 ## About
 
@@ -8,16 +8,11 @@ This simulation was set up and tested by a single script, ```dos.py```. The scri
 
 ## Parameters
 
-### Constants
-
-- Link bandwidth of 10 megabits per second
-- Link delay of 5 milliseconds
-- Packet loss of 5 percent
-- Max queue size of 1000 bytes
-
-### Variables
-
-Host counts of 8, 16, 32, 64, 128, 256, and 512 were used to measure results.
+- Link bandwidth of 10 & 100 megabits per second
+- Link delay of 5 & 0 milliseconds
+- Packet loss of 5 & 0 percent
+- Max queue size of 1,000 & 100,000 bytes
+- Host counts of 8, 16, 32, 64, 128, 256, and 512 
 
 ## Results
 
