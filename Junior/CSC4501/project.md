@@ -25,6 +25,12 @@ Host counts of 8, 16, 32, 64, 128, 256, and 512 were used to measure results.
 
 The results shown operated as expected from 8 to 32 hosts. Approximately 5% of traffic was lost. At 64 hosts, however, the server started to reply to far fewer packets. It can be seen that the server reached a wall at approximately 65,000 successful replies over 30 seconds over the last two tests. This is likely due to the low computing resources that the server had and an overflow of the link queue.
 
+![results graph](./project-graph-2.png "Results Graph")
+
+After bandwidth is increased to 100 megabits, delay set to 0 milliseconds, packet loss set to 0 percent, and max queue size set to 100,000 bytes, there was some improvement in response.
+
+During all tests, the maximum bandwidth was reached.
+
 ## Running the Tests
 
 The source for this document and the three required scripts can be found at https://github.com/DrakeLambert/LSU-Projects/tree/master/Junior/CSC4501.
