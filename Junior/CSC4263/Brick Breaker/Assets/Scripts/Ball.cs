@@ -20,6 +20,7 @@ public class Ball : MonoBehaviour {
 			inPlay = true;
 			body.isKinematic = false;
 			body.AddForce (new Vector3 (initVelocity, initVelocity, 0));
+			Game.Begin ();
 		}
 	}
 }
