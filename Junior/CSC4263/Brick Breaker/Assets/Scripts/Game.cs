@@ -8,9 +8,17 @@ public class Game : MonoBehaviour {
 	static Game instance;
 	public Text Game_Text;
 	private bool Won = false;
+	private bool Lost = false;
 
 	void Start() {
 		instance = this;
+	}
+
+	void Update() {
+		if ((Lost || Won) && Input.GetButtonDown ("Fire1")) {
+			Brick.count = 20;
+			Application.LoadLevel (Application.loadedLevel);
+		}
 	}
 
 	public static void Begin() {
@@ -20,6 +28,7 @@ public class Game : MonoBehaviour {
 	public static void Lose() {
 		if(!instance.Won)
 			instance.Game_Text.text = "You Lose";
+		instance.Lost = true;
 	}
 
 	public static void Win() {

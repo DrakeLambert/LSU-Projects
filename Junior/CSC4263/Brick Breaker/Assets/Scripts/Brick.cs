@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Brick : MonoBehaviour {
 
-	static int count = 20;
+	public static int count = 20;
 
 	void OnCollisionEnter ()
 	{
