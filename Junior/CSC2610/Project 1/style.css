@@ -1,0 +1,33 @@
+.medium-underline {
+    font-size: 1.5em;
+    text-decoration: underline;
+}
+
+.large-ln {
+    line-height: 2em;
+}
+
+.text-center {
+    text-align: center;
+}
+
+h1, h2 {
+    color: green;
+}
+
+.blue {
+    color: blue;
+}
+
+.purple {
+    color: rgb(85, 26, 139);
+}
+
+label {
+    font-weight: bold;
+    color: maroon;
+}
+
+form input[type=text] {
+    background-color: lightblue;
+}
