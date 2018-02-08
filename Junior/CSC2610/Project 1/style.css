@@ -12,7 +12,7 @@
 }
 
 h1, h2 {
-    color: green;
+    color: darkgreen;
 }
 
 .blue {
@@ -20,14 +20,22 @@ h1, h2 {
 }
 
 .purple {
-    color: rgb(85, 26, 139);
+    color: purple;
 }
 
 label {
     font-weight: bold;
-    color: maroon;
+    color: darkred;
 }
 
 form input[type=text] {
     background-color: lightblue;
+}
+
+li>ul>li {
+    color: red;
+}
+
+a:visited {
+    color: lightblue;
 }
