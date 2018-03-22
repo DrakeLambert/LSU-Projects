@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Motorcycle running</title>
+  <style></style>
+</head>
+
+<body>
+
+  <button id="start-button">Start</button>
+  <button id="speed-button">Go Faster!</button>
+  <button id="stop-button">Stop</button>
+  <div id="info"></div>
+
+  <img style="position:absolute; left: 0px; top: 80px;" src="http://www.csc.lsu.edu/~qywang/CS6210/HTMLExercise/motorCycle.gif">
+
+  <script>
+    var movePixels = 10;
+    var delayMs = 50;
+    var catTimer = null;
+    function motorCycleRunning() {
+      var img = document.getElementsByTagName('img')[0];
+      var currentLeft = parseInt(img.style.left);
+      img.style.left = (currentLeft + movePixels) + 'px';
+      if (currentLeft > (window.innerWidth - img.width)) {
+        img.style.left = '0px';
+      }
+    }
+    function startRunning() {
+      catTimer = window.setInterval(motorCycleRunning, delayMs);
+    }
+    document.getElementById('start-button').addEventListener('click', startRunning);
+    document.getElementById('stop-button').addEventListener('click', () => {
+      window.clearInterval(catTimer);
+      delayMs = 50;
+    });
+    document.getElementById('speed-button').addEventListener('click', () => {
+      window.clearInterval(catTimer);
+      delayMs = 15;
+      startRunning();
+    });
+
+  </script>
+
+
+
+</body>
+
+</html>
