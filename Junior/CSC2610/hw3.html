@@ -35,14 +35,13 @@
     <script type="text/javascript" src="http://www.csc.lsu.edu/~qywang/CS6210/HTMLExercise/lecture16/youtube.js"></script>
     <script type="text/javascript" src="./jquery-3.3.1.js"></script>
     <script>
-        var videoLinks = $('a');
-        for (var i = 0; i < videoLinks.length; i++) {
-            var linkUrl = videoLinks[i].getAttribute('href');
-            var thumbnailUrl = youtube.generateThumbnailUrl(linkUrl);
-            var thumbnailImg = document.createElement('img');
+        $('a').each((i,a) => {
+            let linkUrl = $(a).attr('href');
+            let thumbnailUrl = youtube.generateThumbnailUrl(linkUrl);
+            let thumbnailImg = document.createElement('img');
             thumbnailImg.setAttribute('src', thumbnailUrl);
-            videoLinks[i].append(thumbnailImg);
-        }  
+            a.append(thumbnailImg);
+        });  
     </script>
 </body>
 
