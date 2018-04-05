@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Video Watcher</title>
+    <link rel="stylesheet" type="text/css" href="http://www.csc.lsu.edu/~qywang/CS6210/HTMLExercise/lecture16/bootstrap.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <h2 class="page-header">Best Videos Ever ?</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span3">
+                <ul>
+                    <li>
+                        <a href="https://www.youtube.com/watch?v=TddFnTB_7IM">Trip through the 80s</a>
+                    </li>
+                    <li>
+                        <a href="https://www.youtube.com/watch?v=epUk3T2Kfno">Otters Holding Hands</a>
+                    </li>
+                    <li>
+                        <a href="https://www.youtube.com/watch?v=il2IrgFHfsg">The Ooooh Cat</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="http://www.csc.lsu.edu/~qywang/CS6210/HTMLExercise/lecture16/youtube.js"></script>
+    <script type="text/javascript" src="./jquery-3.3.1.js"></script>
+    <script>
+        $('a').each((i,a) => {
+            let linkUrl = $(a).attr('href');
+            let thumbnailUrl = youtube.generateThumbnailUrl(linkUrl);
+            let thumbnailImg = document.createElement('img');
+            thumbnailImg.setAttribute('src', thumbnailUrl);
+            a.append(thumbnailImg);
+        });  
+    </script>
+</body>
+
+</html>
