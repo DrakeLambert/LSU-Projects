@@ -2,17 +2,16 @@ import java.io.*;
 
 public class FileCopy {
     public static void main(String[] args) throws IOException {
-        FileReader freader = new FileReader("./Mercury.txt");
-        BufferedReader reader = new BufferedReader(freader);
-        FileWriter fwriter = new FileWriter("./Mercury-2.txt");
-        BufferedWriter writer = new BufferedWriter(fwriter);
+        byte[] buffer = new byte[1000];
 
-        String nextLine = reader.readLine();
-        while (nextLine != null) {
-            writer.write(nextLine + "\n");
-            nextLine = reader.readLine();
+        FileInputStream inputStream = new FileInputStream(args[1]);
+        FileOutputStream outputStream = new FileOutputStream(args[1] + " - 2");
+
+        int read = inputStream.read(buffer);
+        while (read != -1) {
+            outputStream.write(buffer, 0, read);
         }
-        reader.close();
-        writer.close();
+        inputStream.close();
+        outputStream.close();
     }
 }
