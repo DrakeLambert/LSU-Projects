@@ -4,16 +4,15 @@
 
 See [Power Monitor User Manual](http://msoon.github.io/powermonitor/PowerTool/doc/LVPM%20Manual.pdf).
 
-## Use
+## Monitoring Power Consumption
 
-### Example
+Devices with batteries cannot be reliably monitored for power consumption via their charging ports because this will be monitoring the power used to charge the battery, not to power the device.
 
-Device: Samsung Galaxy S4  
-Charging Voltage: 3.8V  
-Charging Amperage: 1500mA
+### Case 1
 
-1. Set vOut to 3.80 volts
-1. 
+Device: Samsung Galaxy S4
+
+s
 
 ## Additional Resources
 
