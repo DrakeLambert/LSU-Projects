@@ -1,5 +1,8 @@
 # Power Monitor Guide
 
+Date: 8/15/2018  
+Author: Drake Lambert
+
 ## Monitoring Computer Configuration
 
 Install the Power Tool software and connect the Power Monitor to your monitoring computer. Note that Linux and Mac OS machines are not currently supported by the Power Tool software.
