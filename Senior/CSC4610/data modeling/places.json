@@ -1,0 +1,35 @@
+[
+    {
+        "Name": "Pete Maravich Assembly Center",
+        "Address": {
+            "Street": "North Stadium Dr",
+            "City": "Baton Rouge",
+            "State": "Louisiana",
+            "ZipCode": "70802",
+            "Country": "United States"
+        },
+        "Rating": 4.6
+    },
+    {
+        "Name": "Wienerschnitzel",
+        "Address": {
+            "Street": "2948 Highland Rd",
+            "City": "Baton Rouge",
+            "State": "Louisiana",
+            "ZipCode": "70802",
+            "Country": "United States"
+        },
+        "Rating": 4.0
+    },
+    {
+        "Name": "Tiger Stadium",
+        "Address": {
+            "Street": "1 North Stadium Drive",
+            "City": "Baton Rouge",
+            "State": "Louisiana",
+            "ZipCode": "70803",
+            "Country": "United States"
+        },
+        "Rating": 5
+    }
+]

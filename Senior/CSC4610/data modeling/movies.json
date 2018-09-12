@@ -1,0 +1,125 @@
+{
+    "Movies": [
+        {
+            "id": 1,
+            "name": "Les Misérables",
+            "actorIds": [
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            "studioId": 1
+        },
+        {
+            "id": 2,
+            "name": "The Soloist",
+            "actorIds": [
+                6,
+                7,
+                8,
+                14
+            ],
+            "studioId": 2
+        },
+        {
+            "id": 3,
+            "name": "Sherlock Holmes",
+            "actorIds": [
+                7,
+                9,
+                10,
+                11
+            ],
+            "studioId": 3
+        },
+        {
+            "id": 4,
+            "name": "Rise of the Guardians",
+            "actorIds": [
+                1,
+                12,
+                13,
+                15                
+            ],
+            "studioId": 2
+        }
+    ],
+    "Actors": [
+        {
+            "id": 1,
+            "name": "Hugh Jackman"
+        },
+        {
+            "id": 2,
+            "name": "Russell Crowe"
+        },
+        {
+            "id": 3,
+            "name": "Anne Hathaway"
+        },
+        {
+            "id": 4,
+            "name": "Amanda Seyfried"
+        },
+        {
+            "id": 5,
+            "name": "Sacha Baron Cohen"
+        },
+        {
+            "id": 6,
+            "name": "Jamie Foxx"
+        },
+        {
+            "id": 7,
+            "name": "Robert Downey Jr."
+        },
+        {
+            "id": 8,
+            "name": "Catherine Keener"
+        },
+        {
+            "id": 9,
+            "name": "Jude Law"
+        },
+        {
+            "id": 10,
+            "name": "Rachel McAdams"
+        },
+        {
+            "id": 11,
+            "name": "Mark Strong"
+        },
+        {
+            "id": 12,
+            "name": "Alec Baldwin"
+        },
+        {
+            "id": 13,
+            "name": "Isla Fisher"
+        },
+        {
+            "id": 14,
+            "name": "Tom Hollander"
+        },
+        {
+            "id": 15,
+            "name": "Chris Pine"
+        }
+    ],
+    "Studios": [
+        {
+            "id": 1,
+            "name": "Universal Pictures"
+        },
+        {
+            "id": 2,
+            "name": "DreamWorks"
+        },
+        {
+            "id": 3,
+            "name": "Warner Bros"
+        }
+    ]
+}
