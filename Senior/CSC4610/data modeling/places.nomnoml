@@ -1,0 +1,9 @@
+[place] - [<usecase>rating]
+[place] - [<usecase>name]
+[place] - [address]
+
+[address] - [<usecase>street]
+[address] - [<usecase>city]
+[address] - [<usecase>state]
+[address] - [<usecase>zipcode]
+[address] - [<usecase>country]

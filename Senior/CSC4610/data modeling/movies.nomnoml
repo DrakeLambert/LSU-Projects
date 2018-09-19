@@ -1,0 +1,10 @@
+[movie] - [<usecase>movieId]
+[movie] - [<usecase>Title]
+[movie] -> M:M [actor]
+[movie] -> 1:M[studio]
+
+[actor] - [<usecase>actorId]
+[actor] - [<usecase>actorName]
+
+[studio] - [<usecase>id]
+[studio] - [<usecase>studioName]

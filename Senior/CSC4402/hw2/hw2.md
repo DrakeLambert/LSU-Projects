@@ -63,10 +63,10 @@ Drake Lambert
         ```
     - For patients from ’New Orleans’ with age ≤ 40, get Pnum, Pname, number of distinct doctors the patient has visited, and the total amount of Unpaid bill balance for the patient. Arrange the result in descending order of Unpaid bill balance.
         ```sql
-            select p.Pnum, p.Pname, count(docs), sum(balance) as bal
-            from (select * from Patient where Age<=40 and City='New Orleans') as p
-            left join (select distinct Dnum from Visit) as docs ON Visit.Pnum=Patient.Pnum
-            left join (select Paid_amount - Bill_Amount from Visit) as balance on Visit.Pnum=Patient.Pnum
+            select patient.Pnum, patient.Pname, count(docs.Dnum), sum(balance.balance) as bal
+            from (select * from Patient where Age<=40 and City='New Orleans') as patient
+            left join (select distinct Dnum from Visit) as docs ON docs.Pnum=Patient.Pnum
+            left join (select *,(Paid_amount - Bill_Amount) as balance from Visit) as balance on balance.Pnum=Patient.Pnum
             order by bal desc;
         ```
     - Get distinct Pnum, Dnum pairs such that the patient has visited the doctor, and and they (the patient and the doctor) are from the same city.
