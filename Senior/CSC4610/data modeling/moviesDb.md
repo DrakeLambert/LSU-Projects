@@ -9,6 +9,16 @@
 | 3   | Sherlock Holmes       | 3
 | 4   | Rise of the Guardians | 4
 
+```sql
+CREATE TABLE Movie {
+    movieId INT,
+    title VARCHAR(255),
+    studioId INT,
+    PRIMARY KEY (movieId)
+    FOREIGN KEY (studioId) REFERENCES Studio (StudioId)
+};
+```
+
 ## Movie-Actor Pivot Table
 
 | movieId | actorId
@@ -31,6 +41,15 @@
 | 4       | 13
 | 4       | 15
 
+```sql
+CREATE TABLE Movie_Actor {
+    movieId INT,
+    actorId INT,
+    FOREIGN KEY (movieId) REFERENCES Movie (movieId),
+    FOREIGN KEY (actorId) REFERENCES Actor (actorId)
+};
+```
+
 ## Actors Table
 
 | id   | name
@@ -51,6 +70,14 @@
 | 14   | Tom Hollander
 | 15   | Chris Pine
 
+```sql
+CREATE TABLE Actor {
+    actorId INT,
+    actorName VARCHAR(255),
+    PRIMARY KEY (actorId)
+};
+```
+
 ## Studios Table
 
 | id  | name
@@ -58,3 +85,11 @@
 | 1   | Universal Pictures
 | 2   | DreamWorks
 | 3   | Warner Bros
+
+```sql
+CREATE TABLE Studio {
+    studioId INT,
+    studioName VARCHAR(255),
+    PRIMARY KEY (studioId)
+};
+```
