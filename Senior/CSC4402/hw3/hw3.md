@@ -2,59 +2,6 @@
 
 Drake Lambert
 
-## Create Schema
-
-```sql
-create table CM (
-  DIVISION varchar(20),
-  DEPT varchar(20),
-  BUDGET integer,
-  primary key(DEPT)
-);
-create table EM (
-  ID varchar(20),
-  NAME varchar(20),
-  CITY varchar(20),
-  DEPT varchar(20),
-  SALARY integer,
-  primary key(ID)
-);
-create table PR (
-  Pnum varchar(20),
-  DIRECTOR_ID varchar(20),
-  CITY varchar(20),
-  DEPT varchar(20),
-  primary key(Pnum),
-  FOREIGN KEY (DIRECTOR_ID) REFERENCES EM(ID)
-);
-create table EP (
-  Pnum varchar(20),
-  ID varchar(20),
-  HOUR integer,
-  primary key(Pnum, ID),
-  FOREIGN KEY (ID) REFERENCES EM(ID),
-  FOREIGN KEY (Pnum) REFERENCES PR(Pnum)
-);
-create table CR (
-  Cnum varchar(20),
-  TITLE varchar(20),
-  DEPT varchar(20),
-  TEACHER_ID varchar(20),
-  primary key(Cnum),
-  FOREIGN KEY (TEACHER_ID) REFERENCES EM(ID)
-);
-create table ER (
-  Cnum varchar(20),
-  ID varchar(20),
-  GRADE integer,
-  primary key(Cnum, ID),
-  FOREIGN KEY (ID) REFERENCES EM(ID),
-  FOREIGN KEY (Cnum) REFERENCES CR(Cnum)
-);
-```
-
-## Questions
-
 1. Get ID and name for employees who are either teachers or project directors.
     ```sql
     select ID, NAME from EM
