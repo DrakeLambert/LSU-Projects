@@ -70,6 +70,8 @@ In the design and implementation phase, I will translate the real world domain k
     - Use visual modeling to describe the domain of the project.
 1. Implement the software design in code.
 
+<br/>
+
 ### Publication and Testing
 
 In the publication and testing phase, I will focus on promoting the service and polishing it based on user feedback. The ultimate goal will be to hand this project off to future maintainers.
@@ -99,6 +101,14 @@ In the publication and testing phase, I will focus on promoting the service and 
 I am a Computer Science major concentrating on Cloud Computing, and I plan to pursue a career in designing web solutions. This project will allow me to go through every motion that would be expected of me in a professional setting: from idea to the handoff of the finished product. I want to use this project to not only challenge myself technologically, but also use it to develop my product marketing skills and my user interaction skills.
 
 I am passionate about designing solutions to real world problems. This project will be part of my expression of giving back to my community. I still haven't quite determined if I enjoy the technological design more or the internal reward I feel for making a positive difference in others' lives. I do know that wrapping them both up into one project gets me very excited!
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## Budget Plan
 
