@@ -19,3 +19,5 @@
     - Domains: permitted values for an attribute
     - Attributes: column of table
     - Keys: identifier attribute
+- Relational Algebra
+    - Select where = sigma_condition(selection)
