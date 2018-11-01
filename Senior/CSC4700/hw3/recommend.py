@@ -38,6 +38,11 @@ print('the average rating of all ratings: {:.4f}'.format(mean(allRatings)))
 
 # Compute average rating of base user id
 
+print('the average rating of base user: {:.4f}'.format(mean(userRatings[base_user_id])))
+
 # Compute base user id neighbors whose jaccard similarity to base is larger than 0.2
+
+def userLikes(rating):
+  return rating > 3
 
 # Compute items liked by neighbors
