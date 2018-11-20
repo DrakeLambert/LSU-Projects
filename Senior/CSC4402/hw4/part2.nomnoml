@@ -1,0 +1,63 @@
+[Patient |
+	P_ID: key
+    name
+    age
+    address
+    phone_number
+]
+[Patient] - [Visit]
+[Visit] - [Doctor]
+[Patient] <- [<choice>Has Perscription]
+[Has Perscription] - [Perscription]
+[Patient] <- [<choice>Insured by]
+[Insured by] - 0,* [Insurance Policy]
+
+[Perscription |
+	date
+]
+
+[<choice>Visit |
+	Date
+]
+
+[Doctor |
+	D_ID: key
+    name
+    specialty
+]
+[Doctor] <- [Wrote]
+[Wrote] - [Perscription]
+
+[Medication |
+	M_ID: key
+    name
+    dosage
+    price
+]
+[Medication] - [Included on]
+[<choice>Included on |
+	quantity
+] - [Perscription]
+
+[Insurance Company |
+	Insure_ID: key
+    name
+    address
+    phone_number
+]
+
+[Insurance Policy |
+	Policy_ID: key
+    name_of_insured
+    effective_date
+]
+[Insurance Policy] - [<choice>Issued by]
+[Issued by] -> [Insurance Company]
+[Insurance Policy] <- [<choice>has]
+[has] - [Claim]
+
+[Claim |
+	Claim_ID: key
+    amount
+    date_claim
+]

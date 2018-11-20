@@ -1,0 +1,36 @@
+[Department |
+    DEPT: key
+	DIVISION
+    BUDGET
+]
+
+[Employee |
+	ID: key
+    NAME
+    CITY
+    SALARY
+]
+[Employee] - [<choice>Employee of]
+[Employee of] -> [Department]
+[Employee] <- [<choice>Director of]
+[Director of] - [Project]
+[Employee] - [<choice>Participant of]
+[Participant of] - [Project]
+[Employee] <- [<choice>Teacher of]
+[Teacher of] - [Course]
+[Employee] - [<choice>Enrolled in]
+[Enrolled in] - [Course]
+
+[Project |
+	Pnum: key
+	CITY
+]
+[Project] - [<choice>Project of]
+[Project of] -> [Department]
+
+[Course |
+	Cnum: key
+    TITLE
+]
+[Course] - [<choice>Course of]
+[Course of] -> [Department]
