@@ -144,16 +144,16 @@ seg000:7CAE    sub_7C36 endp                                                    
 seg000:7CAE                                                                                  | 
 seg000:7CAF    ; --------------------------------------------------------------------------- | 
 seg000:7CAF                                                                                  | 
-seg000:7CAF    loc_7CAF: ; CODE XREF: seg000:7C00j                                           | start of program
+seg000:7CAF    loc_7CAF: ; CODE XREF: seg000:7C00j                                           | 
 seg000:7CAF    xor ax, ax                                                                    | clear ax
-seg000:7CB1    mov ds, ax                                                                    | initialize data segment pointer to 0
-seg000:7CB3    cli                                                                           | ignore external interrupts
-seg000:7CB4    mov ss, ax                                                                    | initialize stack segment pointer to 0
+seg000:7CB1    mov ds, ax                                                                    | initialize data segment
+seg000:7CB3    cli                                                                           | ignore interrupts in order to modify stack segment
+seg000:7CB4    mov ss, ax                                                                    | initialize stack segment
 seg000:7CB6    mov ax, 7C00h                                                                 | store program start address in ax
-seg000:7CB9    mov sp, ax                                                                    | start stack at 7C00h
-seg000:7CBB    sti                                                                           | enable external interrupts
-seg000:7CBC    push ds                                                                       | push 0 onto stack
-seg000:7CBD    push ax                                                                       | push 7C00h onto stack
+seg000:7CB9    mov sp, ax                                                                    | move stack pointer to before code start
+seg000:7CBB    sti                                                                           | enable interrupts
+seg000:7CBC    push ds                                                                       | push data segment (0) onto stack
+seg000:7CBD    push ax                                                                       | push ax (7C00h) onto stack
 seg000:7CBE    mov ax, ds:4Ch                                                                | store 4Ch into ax
 seg000:7CC1    mov ds:word_7C0A, ax                                                          | 
 seg000:7CC4    mov ax, ds:4Eh                                                                | 
