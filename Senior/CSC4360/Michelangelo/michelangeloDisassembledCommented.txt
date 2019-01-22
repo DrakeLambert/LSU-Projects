@@ -154,15 +154,15 @@ seg000:7CB9    mov sp, ax                                                       
 seg000:7CBB    sti                                                                           | enable interrupts
 seg000:7CBC    push ds                                                                       | push data segment (0) onto stack
 seg000:7CBD    push ax                                                                       | push ax (7C00h) onto stack
-seg000:7CBE    mov ax, ds:4Ch                                                                | store 4Ch into ax
-seg000:7CC1    mov ds:word_7C0A, ax                                                          | 
-seg000:7CC4    mov ax, ds:4Eh                                                                | 
-seg000:7CC7    mov ds:word_7C0C, ax                                                          | 
-seg000:7CCA    mov ax, ds:413h                                                               | 
-seg000:7CCD    dec ax                                                                        | 
-seg000:7CCE    dec ax                                                                        | 
-seg000:7CCF    mov ds:413h, ax                                                               | 
-seg000:7CD2    mov cl, 6                                                                     | 
+seg000:7CBE    mov ax, ds:4Ch                                                                | stores part 1 actual int13 handler pointer in ax
+seg000:7CC1    mov ds:word_7C0A, ax                                                          | stores part 1 actual int13 handler pointer at memory location 9739h
+seg000:7CC4    mov ax, ds:4Eh                                                                | stores part 2 actual int13 handler pointer in ax
+seg000:7CC7    mov ds:word_7C0C, ax                                                          | stores part 2 actual int13 handler pointer at memory location F000h
+seg000:7CCA    mov ax, ds:413h                                                               | get current memory size and store it in ax
+seg000:7CCD    dec ax                                                                        | decrement memory size by 2k
+seg000:7CCE    dec ax                                                                        |  .continuation 
+seg000:7CCF    mov ds:413h, ax                                                               | place decremented memory size back into 413h
+seg000:7CD2    mov cl, 6                                                                     | store 6 in cl
 seg000:7CD4    shl ax, cl                                                                    | 
 seg000:7CD6    mov es, ax                                                                    | 
 seg000:7CD8    mov ds:word_7C05, ax                                                          | 
