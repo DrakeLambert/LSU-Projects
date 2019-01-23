@@ -154,30 +154,30 @@ seg000:7CB9    mov sp, ax                                                       
 seg000:7CBB    sti                                                                           | enable interrupts
 seg000:7CBC    push ds                                                                       | push data segment (0) onto stack
 seg000:7CBD    push ax                                                                       | push ax (7C00h) onto stack
-seg000:7CBE    mov ax, ds:4Ch                                                                | stores part 1 actual int13 handler pointer in ax
-seg000:7CC1    mov ds:word_7C0A, ax                                                          | stores part 1 actual int13 handler pointer at memory location 9739h
-seg000:7CC4    mov ax, ds:4Eh                                                                | stores part 2 actual int13 handler pointer in ax
-seg000:7CC7    mov ds:word_7C0C, ax                                                          | stores part 2 actual int13 handler pointer at memory location F000h
-seg000:7CCA    mov ax, ds:413h                                                               | get current memory size and store it in ax
+seg000:7CBE    mov ax, ds:4Ch                                                                | store byte 1 actual int13 handler pointer in ax
+seg000:7CC1    mov ds:word_7C0A, ax                                                          | save byte 1 actual int13 handler pointer at word_7C0A
+seg000:7CC4    mov ax, ds:4Eh                                                                | store byte 2 actual int13 handler pointer in ax
+seg000:7CC7    mov ds:word_7C0C, ax                                                          | save byte 2 actual int13 handler pointer at word_7C0C
+seg000:7CCA    mov ax, ds:413h                                                               | store current memory size in ax
 seg000:7CCD    dec ax                                                                        | decrement memory size by 2k
 seg000:7CCE    dec ax                                                                        |  .continuation 
-seg000:7CCF    mov ds:413h, ax                                                               | place decremented memory size back into 413h
+seg000:7CCF    mov ds:413h, ax                                                               | save decremented memory size back into 413h
 seg000:7CD2    mov cl, 6                                                                     | store 6 in cl
-seg000:7CD4    shl ax, cl                                                                    | 
-seg000:7CD6    mov es, ax                                                                    | 
-seg000:7CD8    mov ds:word_7C05, ax                                                          | 
-seg000:7CDB    mov ax, 0Eh                                                                   | 
-seg000:7CDE    mov ds:4Ch, ax                                                                | 
-seg000:7CE1    mov word ptr ds:4Eh, es                                                       | 
-seg000:7CE5    mov cx, 1BEh                                                                  | 
-seg000:7CE8    mov si, 7C00h                                                                 | 
-seg000:7CEB    xor di, di                                                                    | 
-seg000:7CED    cld                                                                           | 
-seg000:7CEE    rep movsb                                                                     | 
-seg000:7CF0    jmp dword ptr cs:unk_7C03                                                     | 
+seg000:7CD4    shl ax, cl                                                                    | shift memory size left 6 bits
+seg000:7CD6    mov es, ax                                                                    | store shifted memory size in es: extra segment
+seg000:7CD8    mov ds:word_7C05, ax                                                          | save shifted memory size at word_7C05
+seg000:7CDB    mov ax, 0Eh                                                                   | store 0Eh in ax
+seg000:7CDE    mov ds:4Ch, ax                                                                | overwrite int13 handler byte 1 & 2 with 0Eh: the floppy disc operation complete handler
+seg000:7CE1    mov word ptr ds:4Eh, es                                                       | save shifted memory size into the 2 bytes starting at 4Eh: byte 2 of the int13 handler
+seg000:7CE5    mov cx, 1BEh                                                                  | store length of program in cx
+seg000:7CE8    mov si, 7C00h                                                                 | store start of program address in si: source index
+seg000:7CEB    xor di, di                                                                    | clear di: destination index
+seg000:7CED    cld                                                                           | set DF flag to 0: this increments si and di during the next operation
+seg000:7CEE    rep movsb                                                                     | copy this program to just above the now hidden memory location: Repeat cx(1BEh) times: Move byte at address ds:si to address es:di
+seg000:7CF0    jmp dword ptr cs:unk_7C03                                                     | jump to next line in program, but in new high memory location
 seg000:7CF5    ; --------------------------------------------------------------------------- | 
-seg000:7CF5    xor ax, ax                                                                    | 
-seg000:7CF7    mov es, ax                                                                    | 
+seg000:7CF5    xor ax, ax                                                                    | clear ax
+seg000:7CF7    mov es, ax                                                                    | clear es
 seg000:7CF9    int 13h ; DISK - RESET DISK SYSTEM                                            | 
 seg000:7CF9    ; DL = drive (if bit 7 is set both hard disks and floppy disks reset)         | 
 seg000:7CFB    push cs                                                                       | 
