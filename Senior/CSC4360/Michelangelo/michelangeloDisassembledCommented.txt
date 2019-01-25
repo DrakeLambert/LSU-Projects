@@ -52,7 +52,7 @@ seg000:7C27    pushf                                                            
 seg000:7C28    call sub_7C36                                                                 | 
 seg000:7C2B    popf                                                                          | 
 seg000:7C2C    retf 2                                                                        | 
-seg000:7C2F    ; --------------------------------------------------------------------------- | 
+seg000:7C2F    ; --------------------------------------------------------------------------- | kinda seems like an infinite loop, but IT AINT
 seg000:7C2F                                                                                  | 
 seg000:7C2F    loc_7C2F: ; CODE XREF: seg000:7C12j                                           | 
 seg000:7C2F    ; seg000:7C1Dj                                                                | 
