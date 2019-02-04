@@ -154,10 +154,10 @@ seg000:7CB9    mov sp, ax                                                       
 seg000:7CBB    sti                                                                           | enable interrupts
 seg000:7CBC    push ds                                                                       | push data segment (0) onto stack
 seg000:7CBD    push ax                                                                       | push ax (7C00h) onto stack
-seg000:7CBE    mov ax, ds:4Ch                                                                | store offset of actual int13 handler pointer in ax
-seg000:7CC1    mov ds:word_7C0A, ax                                                          | save offset of actual int13 handler pointer at word_7C0A
-seg000:7CC4    mov ax, ds:4Eh                                                                | store segment of actual int13 handler pointer in ax
-seg000:7CC7    mov ds:word_7C0C, ax                                                          | save segment of actual int13 handler pointer at word_7C0C
+seg000:7CBE    mov ax, ds:4Ch                                                                | store segment of actual int13 handler pointer in ax
+seg000:7CC1    mov ds:word_7C0A, ax                                                          | save segment of actual int13 handler pointer at word_7C0A
+seg000:7CC4    mov ax, ds:4Eh                                                                | store offset of actual int13 handler pointer in ax
+seg000:7CC7    mov ds:word_7C0C, ax                                                          | save offset of actual int13 handler pointer at word_7C0C
 seg000:7CCA    mov ax, ds:413h                                                               | store current memory size in ax
 seg000:7CCD    dec ax                                                                        | decrement memory size by 2k
 seg000:7CCE    dec ax                                                                        |  .continuation 
