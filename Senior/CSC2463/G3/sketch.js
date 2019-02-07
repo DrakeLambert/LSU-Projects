@@ -18,10 +18,6 @@ function draw() {
     sprites.forEach(sprite => sprite.draw());
 }
 
-
-
-
-
 class HorizontalScrollerSprite {
     constructor(image, initialX, initialY, frameCount, frameX, frameY, frameWidth, frameHeight, speed) {
         this.image = image;
