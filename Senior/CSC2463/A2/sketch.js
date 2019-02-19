@@ -4,8 +4,7 @@ function setup() {
     const namedEffects = [
         [new Tone.BitCrusher(4), 'Bit Crusher'],
         [new Tone.PitchShift(.5), 'Pitch Shift'],
-        [new Tone.Vibrato(50, 10), 'Vibrato'],
-        [new Tone.Distortion(10), 'Distortion']
+        [new Tone.Vibrato(50, 10), 'Vibrato']
     ];
 
     fill('black');
@@ -13,14 +12,17 @@ function setup() {
     textSize(20);
 
     namedEffects.forEach((namedEffect, i) => {
-        let [effect, name] = namedEffect;
-        text(name, 10, i * 100 + 50);
+        const [effect, name] = namedEffect;
+        const initialValue = 0;
 
-        let slider = createSlider(0, 100, 50);
+        effect.wet.value = initialValue * 0.01;
+
+        text(name, 10, i * 100 + 50);
+        let slider = createSlider(0, 100, initialValue);
         slider.position(10, i * 100 + 80);
         slider.style('width', '80px');
         slider.elt.addEventListener('input', () => {
-            effect.wet.value = slider.value() / 100;
+            effect.wet.value = slider.value() * 0.01;
         });
     });
 
@@ -47,7 +49,8 @@ function setup() {
         const note = noteKey[0] + '4';
         const key = noteKey[1];
         const envelope = new Tone.AmplitudeEnvelope().connect(firstEffect);
-        new Tone.Oscillator(note).connect(envelope).start();
+        const oscillator = new Tone.Oscillator(note).connect(envelope).start();
+        // new Tone.LFO(1000).connect(oscillator.frequency);
 
         const triggerButton = createButton(note);
         triggerButton.position(10 + i * 50, 10);

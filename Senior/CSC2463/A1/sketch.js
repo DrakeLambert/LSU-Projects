@@ -11,12 +11,6 @@ function setup() {
     let songs = [1, 2, 3, 4].map((i) => {
         return new Tone.Player(`/assets/song${i}.mp3`);
     });
-    // [
-    //     new Tone.Player('/assets/song1.mp3'),
-    //     new Tone.Player('/assets/song2.mp3'),
-    //     new Tone.Player('/assets/song3.mp3'),
-    //     new Tone.Player('/assets/song4.mp3'),
-    // ];
 
     fill('black');
     textAlign(LEFT, TOP);
