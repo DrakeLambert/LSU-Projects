@@ -1,103 +1,62 @@
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    const namedEffects = [
-        [new Tone.BitCrusher(4), 'Bit Crusher'],
-        [new Tone.PitchShift(.5), 'Pitch Shift'],
-        [new Tone.Vibrato(50, 10), 'Vibrato']
+    const oscillatorNotes = ['C4','D4','E4','F4','G4'];
+    const oscillators = oscillatorNotes.map(note => new Tone.Oscillator(note));
+
+    oscillators.map(oscillator => {
+        if (Math.random() > 0.5) {
+            const lfo = new Tone.LFO("4n", 400, 4000);
+            lfo.connect(oscillator.frequency);
+        }
+    });
+
+    const keyboardKeys = ['a','s','d','f','g'];
+
+    // Assume oscillators.length === keyboardKeys.length
+    const sources = oscillators.map((source, i) => ({key: keyboardKeys[i], sound: source}));
+
+    const effects = [
+        () => new Tone.BitCrusher(4),
+        () => new Tone.PitchShift(.5),
+        () => new Tone.Vibrato(50, 10),
+        () => new Tone.Chorus(4, 2.5, 0.5),
     ];
 
-    fill('black');
-    textAlign(LEFT, TOP);
-    textSize(20);
+    const randomEffect = () => effects[Math.floor(Math.random() * effects.length)]();
+    const randomEffectChain = (length) => {
+        // Assume length > 0
+        const head = randomEffect();
+        let tail = head;
+        for (let i = 0; i < length; i++) {
+            const nextEffect = randomEffect();
+            tail.connect(nextEffect);
+            tail = nextEffect;
+        }
+        tail.toMaster();
+        return head;
+    };
 
-    namedEffects.forEach((namedEffect, i) => {
-        const [effect, name] = namedEffect;
-        const initialValue = 0;
+    const effectChainLength = 3;
 
-        effect.wet.value = initialValue * 0.01;
+    sources.forEach(source => {
+        const envelope = new Tone.AmplitudeEnvelope();
+        envelope.connect(randomEffectChain(effectChainLength));
+        const sound = source.sound;
+        sound.connect(envelope);
 
-        text(name, 10, i * 100 + 50);
-        let slider = createSlider(0, 100, initialValue);
-        slider.position(10, i * 100 + 80);
-        slider.style('width', '80px');
-        slider.elt.addEventListener('input', () => {
-            effect.wet.value = slider.value() * 0.01;
-        });
-    });
-
-    const effects = namedEffects.map((namedEffect) => {
-        return namedEffect[0];
-    });
-
-    effects.push(Tone.Master);
-
-    effects.reduce((previous, next) => {
-        previous.connect(next);
-        return next;
-    });
-
-    const firstEffect = effects[0];
-
-    const keys = [
-        ['C', 'a'],
-        ['D', 's'],
-        ['E', 'd'],
-        ['F', 'f'],
-        ['G', 'g']
-    ].map((noteKey, i) => {
-        const note = noteKey[0] + '4';
-        const key = noteKey[1];
-        const envelope = new Tone.AmplitudeEnvelope().connect(firstEffect);
-        const oscillator = new Tone.Oscillator(note).connect(envelope).start();
-        // new Tone.LFO(1000).connect(oscillator.frequency);
-
-        const triggerButton = createButton(note);
-        triggerButton.position(10 + i * 50, 10);
-        triggerButton.mousePressed(() => { envelope.triggerAttack(); });
-        triggerButton.mouseReleased(() => { envelope.triggerRelease(); });
         window.addEventListener('keydown', (event) => {
-            if (event.key === key) {
+            if (sound.state === 'stopped') {
+                sound.start();
+            }
+            if (event.key === source.key) {
                 envelope.triggerAttack();
             }
         });
         window.addEventListener('keyup', (event) => {
-            if (event.key === key) {
+            if (event.key === source.key) {
                 envelope.triggerRelease();
             }
         });
-        return key;
     });
-
-    text('Use keys: ' + keys.reduce((x, xs) => { return xs + ', ' + x; }), 300, 12.5);
-
-    // notes.forEach((song, i) => {
-
-    //     let effect = effects[i][0];
-    //     let effectName = effects[i][1];
-
-    //     effect.toMaster();
-    //     effect.wet.value = .5;
-
-    //     song.connect(effect);
-
-    //     text('Song ' + i + ': ' + effectName, 10, i * 100 + 10);
-
-    //     let slider = createSlider(0, 100, 50);
-    //     slider.position(10, i * 100 + 40);
-    //     slider.style('width', '80px');
-    //     slider.elt.addEventListener('input', () => {
-    //         effect.wet.value = slider.value() / 100;
-    //     });
-
-    //     let startButton = createButton('Play / Pause');
-    //     startButton.position(10, i * 100 + 70);
-    //     startButton.mousePressed(() => {
-    //         if (song.state === 'stopped') {
-    //             song.start();
-    //         } else {
-    //             song.stop();
-    //         }
-    //     });;
-    // });
 }
