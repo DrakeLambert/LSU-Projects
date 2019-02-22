@@ -4,6 +4,7 @@ function setup() {
     const oscillatorNotes = ['C4','D4','E4','F4','G4'];
     const oscillators = oscillatorNotes.map(note => new Tone.Oscillator(note));
 
+    // Apply lfo to half of oscillators
     oscillators.map(oscillator => {
         if (Math.random() > 0.5) {
             const lfo = new Tone.LFO("4n", 400, 4000);
