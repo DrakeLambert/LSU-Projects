@@ -7,6 +7,7 @@ class GameTimer {
         this.gameOverSound = new Tone.Player('./assets/gameOver.wav');
         this.gameOverSound.toMaster();
         this.gameOverTrigger = new Trigger();
+        this.gameStartTrigger = new Trigger();
         this.count = 0;
         this.totalTime = 30;
         this.end = Date.now() + this.totalTime * 1000;
@@ -16,6 +17,7 @@ class GameTimer {
 
         const mouseClickedUnSub = mouseClickedTrigger.subscribe(() => {
             this.gameStarted = true;
+            this.gameStartTrigger.trigger();
             mouseClickedUnSub();
         });
     }

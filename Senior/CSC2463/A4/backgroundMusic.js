@@ -1,25 +1,42 @@
 class BackgroundMusic {
     /**
-     * @param {Trigger} mouseClickedTrigger
+     * @param {Trigger} gameStartTrigger
      * @param {Trigger} gameOverTrigger
+     * @param {Trigger} bugSquishedTrigger
      */
-    constructor(mouseClickedTrigger, gameOverTrigger) {
-        const sequence1 = new NoteSequence(["G2", [null, "G2"], null, "Bb2", "C3", "G2", [null, "G2"], null, "F2", "F#2"]);
-        const sequence2 = new NoteSequence();
+    constructor(gameStartTrigger, gameOverTrigger, bugSquishedTrigger) {
+        const sequences = [
+            new NoteSequence(['C2', null, 'C2', null, 'C2', null, 'C2', null], new Tone.Synth().toMaster()),
+            new NoteSequence([null, 'C3', null, 'C3', null, 'C3', null, 'C3'], new Tone.Synth().toMaster()),
+            new NoteSequence(['F2', 'F2', null, null, 'F2', 'F2', null, null], new Tone.FMSynth().toMaster()),
+            new NoteSequence(['D3', ['E3', 'F3'], 'D3', ['E3', 'F3'], 'D3', ['E3', 'F3'], 'D3', ['E3', 'F3']], new Tone.Synth().toMaster()),
+            new NoteSequence([null, ['C3', 'F3', ' C3'], null, ['C3', 'F3', ' C3'], null, ['C3', 'F3', ' C3'], null, ['C3', 'F3', ' C3']], new Tone.Synth().toMaster()),
+        ];
 
-        const mouseClickedUnSub1 = mouseClickedTrigger.subscribe(() => {
+        sequences[0].muted = false;
+
+        let squishedCount = 0;
+        let nextSquishMilestone = 3;
+        let nextSequence = 1;
+        bugSquishedTrigger.subscribe(() => {
+            squishedCount++;
+            if (squishedCount >= nextSquishMilestone) {
+                if (sequences.length > nextSequence) {
+                    sequences[nextSequence].muted = false;
+                }
+                nextSequence++;
+                nextSquishMilestone *= 2;
+            }
+
+        });
+
+        gameStartTrigger.subscribe(() => {
             this.ensureToneStarted();
-            sequence1.start();
-            mouseClickedUnSub1();
-
-            // const mouseClickedUnSub2 = mouseClickedTrigger.subscribe(() => {
-            //     sequence2.start();
-            //     mouseClickedUnSub2();
-            // });
+            sequences.forEach(sequence => sequence.start());
         });
 
         gameOverTrigger.subscribe(() => {
-            sequence1.stop();
+            sequences.forEach(sequence => sequence.stop());
         });
     }
 
@@ -32,18 +49,15 @@ class BackgroundMusic {
 
 class NoteSequence {
     constructor(notes, synth) {
-        if (!notes) {
-            notes = ["C3", ["Eb3", null, "Eb3"], "G3", "Bb3"];
-        }
-        if (!synth) {
-            synth = new Tone.MembraneSynth().toMaster();
-        }
+        this.muted = true;
         this.sequence = new Tone.Sequence(
             (time, note) => {
-                synth.triggerAttackRelease(note, "10hz", time);
+                if (!this.muted) {
+                    synth.triggerAttackRelease(note, '10hz', time);
+                }
             },
             notes,
-            "4n"
+            '4n'
         );
     }
 

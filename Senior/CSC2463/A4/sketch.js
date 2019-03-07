@@ -10,10 +10,11 @@ function setup() {
     noSmooth();
 
     bugImage = loadImage('./assets/bug.png');
-    
+
     new BugCounter(bugSquishedTrigger, drawTrigger);
-    gameOverTrigger = (new GameTimer(drawTrigger, mouseClickedTrigger)).gameOverTrigger;
-    new BackgroundMusic(mouseClickedTrigger, gameOverTrigger);
+    const gameTimer = new GameTimer(drawTrigger, mouseClickedTrigger);
+    gameOverTrigger = gameTimer.gameOverTrigger;
+    new BackgroundMusic(gameTimer.gameStartTrigger, gameTimer.gameOverTrigger, bugSquishedTrigger);
     new BugSquishSound('./assets/squish.wav', bugSquishedTrigger);
     createBugs(30, 1);
 }
