@@ -12,6 +12,7 @@ function setup() {
     createBugs(30, 1);
     new BugCounter(bugSquishedTrigger, drawTrigger);
     new GameTimer(drawTrigger);
+    new BackgroundMusic(mouseClickedTrigger);
 }
 
 function draw() {
