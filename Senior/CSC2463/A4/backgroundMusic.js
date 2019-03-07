@@ -1,9 +1,9 @@
 class BackgroundMusic {
     /**
-     * 
-     * @param {Trigger} mouseClickedTrigger 
+     * @param {Trigger} mouseClickedTrigger
+     * @param {Trigger} gameOverTrigger
      */
-    constructor(mouseClickedTrigger) {
+    constructor(mouseClickedTrigger, gameOverTrigger) {
         const sequence1 = new NoteSequence(["G2", [null, "G2"], null, "Bb2", "C3", "G2", [null, "G2"], null, "F2", "F#2"]);
         const sequence2 = new NoteSequence();
 
@@ -16,6 +16,10 @@ class BackgroundMusic {
             //     sequence2.start();
             //     mouseClickedUnSub2();
             // });
+        });
+
+        gameOverTrigger.subscribe(() => {
+            sequence1.stop();
         });
     }
 
@@ -48,6 +52,6 @@ class NoteSequence {
     }
 
     stop() {
-        this.sequence.start();
+        this.sequence.stop();
     }
 }

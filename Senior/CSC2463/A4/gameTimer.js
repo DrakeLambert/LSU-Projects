@@ -4,6 +4,8 @@ class GameTimer {
      * @param {Trigger} mouseClickedTrigger
      */
     constructor(drawTrigger, mouseClickedTrigger) {
+        this.gameOverSound = new Tone.Player('./assets/gameOver.wav');
+        this.gameOverSound.toMaster();
         this.gameOverTrigger = new Trigger();
         this.count = 0;
         this.totalTime = 30;
@@ -20,6 +22,7 @@ class GameTimer {
     draw() {
         let timeLeft = Math.floor((this.end - Date.now()) / 1000);
         if (!this.gameStarted) {
+            this.end = Date.now() + this.totalTime * 1000;
             timeLeft = 30;
         }
         push();
@@ -41,6 +44,7 @@ class GameTimer {
             text("Game Over", width / 2, height / 2);
             if (!this.gameOver) {
                 this.gameOverTrigger.trigger();
+                this.gameOverSound.start();
             }
             this.gameOver = true;
         }

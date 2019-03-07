@@ -12,8 +12,8 @@ function setup() {
     bugImage = loadImage('./assets/bug.png');
     
     new BugCounter(bugSquishedTrigger, drawTrigger);
-    new BackgroundMusic(mouseClickedTrigger);
     gameOverTrigger = (new GameTimer(drawTrigger, mouseClickedTrigger)).gameOverTrigger;
+    new BackgroundMusic(mouseClickedTrigger, gameOverTrigger);
     new BugSquishSound('./assets/squish.wav', bugSquishedTrigger);
     createBugs(30, 1);
 }
