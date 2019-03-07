@@ -1,4 +1,8 @@
 class BackgroundMusic {
+    /**
+     * 
+     * @param {Trigger} mouseClickedTrigger 
+     */
     constructor(mouseClickedTrigger) {
         const sequence1 = new NoteSequence(["G2", [null, "G2"], null, "Bb2", "C3", "G2", [null, "G2"], null, "F2", "F#2"]);
         const sequence2 = new NoteSequence();
@@ -8,10 +12,10 @@ class BackgroundMusic {
             sequence1.start();
             mouseClickedUnSub1();
 
-            const mouseClickedUnSub2 = mouseClickedTrigger.subscribe(() => {
-                sequence2.start();
-                mouseClickedUnSub2();
-            });
+            // const mouseClickedUnSub2 = mouseClickedTrigger.subscribe(() => {
+            //     sequence2.start();
+            //     mouseClickedUnSub2();
+            // });
         });
     }
 
