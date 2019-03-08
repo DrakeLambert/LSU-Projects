@@ -105,3 +105,39 @@ class RandomBugWalker {
         return false;
     }
 }
+
+class MissedBugSound {
+    /**
+     * @param {Trigger} clickTrigger
+     * @param {Trigger} drawTrigger
+     * @param {Trigger} squishTrigger
+     */
+    constructor(clickTrigger, drawTrigger, squishTrigger) {
+        const states = ['waiting', 'click'];
+        let bugSquished = false;
+        let state = states[0];
+
+        squishTrigger.subscribe(() => {
+            bugSquished = true;
+        });
+
+        clickTrigger.subscribe(() => {
+            state = states[1];
+        });
+
+        drawTrigger.subscribe(() => {
+            switch (state) {
+                case state[1]:
+                    if (!bugSquished) {
+                        // play sound
+                    }
+                    break;
+                default:
+                    break;
+
+            }
+            state = states[0];
+            bugSquished = false;
+        });
+    }
+}
