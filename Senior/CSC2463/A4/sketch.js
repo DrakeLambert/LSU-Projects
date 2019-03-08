@@ -16,6 +16,7 @@ function setup() {
     gameOverTrigger = gameTimer.gameOverTrigger;
     new BackgroundMusic(gameTimer.gameStartTrigger, gameTimer.gameOverTrigger, bugSquishedTrigger);
     new BugSquishSound('./assets/squish.wav', bugSquishedTrigger);
+    new MissedClickSound(bugSquishedTrigger, mouseClickedTrigger, './assets/fart.wav')
     createBugs(30, 1);
 }
 
