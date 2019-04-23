@@ -1,7 +1,7 @@
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    const oscillatorNotes = ['C4','D4','E4','F4','G4'];
+    const oscillatorNotes = ['C4', 'D4', 'E4', 'F4', 'G4'];
     const oscillators = oscillatorNotes.map(note => new Tone.Oscillator(note));
 
     // Apply lfo to half of oscillators
@@ -12,10 +12,10 @@ function setup() {
         }
     });
 
-    const keyboardKeys = ['a','s','d','f','g'];
+    const keyboardKeys = ['a', 's', 'd', 'f', 'g'];
 
     // Assume oscillators.length === keyboardKeys.length
-    const sources = oscillators.map((source, i) => ({key: keyboardKeys[i], sound: source}));
+    const sources = oscillators.map((source, i) => ({ key: keyboardKeys[i], sound: source }));
 
     const effects = [
         () => new Tone.BitCrusher(4),
