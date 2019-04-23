@@ -6,7 +6,7 @@ function draw() {
     background('white');
     const w = 1000;
     const h = 500;
-    const piano = new Piano(windowWidth / 2 - w / 2, windowHeight / 2 - h / 2, w, h, [{ key: 'h', note: 'c' },{ key: 'h', note: 'c' },{ key: 'h', note: 'c' },{ key: 'h', note: 'c' }]);
+    const piano = new Piano(windowWidth / 2 - w / 2, windowHeight / 2 - h / 2, w, h, [{ key: 'h', note: 'c' }, { key: 'h', note: 'c' }, { key: 'h', note: 'c' }, { key: 'h', note: 'c' }]);
     piano.draw();
 }
 
@@ -29,14 +29,16 @@ class Piano {
         stroke('black');
         strokeWeight(2);
         textSize(50);
+        textAlign(CENTER, CENTER);
 
         const keyWidth = this.width / this.keyNotes.length;
-        const rightEdge = this.x + this.width;
         for (let i = 0; i < this.keyNotes.length; i++) {
-            rect(this.x + i * keyWidth, this.y, keyWidth, this.height, 5);
+            const topLeft = this.x + i * keyWidth;
+
+            rect(topLeft, this.y, keyWidth, this.height, 5);
             push();
             fill('black');
-            text(this.keyNotes[i].key, this.x + i * keyWidth + keyWidth / 2, this.y + this.height / 2);
+            text(this.keyNotes[i].key, topLeft, this.y, keyWidth, this.height);
             pop();
         }
     }
