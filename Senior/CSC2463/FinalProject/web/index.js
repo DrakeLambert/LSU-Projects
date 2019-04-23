@@ -1,5 +1,3 @@
-///<reference path="./p5_types/index.d.ts"/>
-
 function setup() {
     createCanvas(windowWidth, windowHeight);
 }
