@@ -1,5 +1,6 @@
 let piano;
 const portName = 'COM3';
+// @ts-ignore
 const serial = new p5.SerialPort();
 let arduinoSequencer;
 
