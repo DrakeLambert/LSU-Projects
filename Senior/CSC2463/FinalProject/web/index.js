@@ -1,6 +1,7 @@
 let piano;
 const portName = 'COM3';
 const serial = new p5.SerialPort();
+let arduinoSequencer;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -15,7 +16,8 @@ function setup() {
         { key: 'g', note: 'g4' }
     ];
     piano = new Piano(windowWidth / 2 - w / 2, windowHeight / 2 - h / 2, w, h, keyNotes, drawTrigger, keyPressedTrigger);
-    new GameManager(drawTrigger, keyPressedTrigger);
+    arduinoSequencer = new ArduinoSequencer(serial, keyNotes.length, 500);
+    new GameManager(drawTrigger, keyPressedTrigger, arduinoSequencer, keyNotes);
 
     serial.open(portName);
     serial.on('data', () => {
@@ -41,21 +43,25 @@ class GameManager {
     /**
      * @param {Trigger} drawTrigger
      * @param {Trigger} keyPressedTrigger
+     * @param {ArduinoSequencer} arduinoSequencer
+     * @param {{ key: string; note: string; }[]} keyNotes
      */
-    constructor(drawTrigger, keyPressedTrigger) {
-        let level = 1;
-        let levelStarted = false;
-
-        let arduinoSequencer = undefined;
+    constructor(drawTrigger, keyPressedTrigger, arduinoSequencer, keyNotes) {
+        this.level = 1;
+        this.levelStarted = false;
+        /** @type {number[]} */
+        this.levelSequence = [];
+        /** @type {number[]} */
+        this.userLevelSequence = [];
 
         drawTrigger.subscribe(() => {
             push();
 
             textSize(50);
             textAlign(CENTER, CENTER);
-            text('Level ' + level, 50, 0, 200, 200);
+            text('Level ' + this.level, 50, 0, 200, 200);
 
-            if (!levelStarted) {
+            if (!this.levelStarted) {
                 text('Press space to start', windowWidth / 2 - 250, 0, 500, 200);
             }
             pop();
@@ -63,8 +69,8 @@ class GameManager {
 
         keyPressedTrigger.subscribe((_, keyCode) => {
             if (keyCode === 32) {
-                if (!levelStarted) {
-                    levelStarted = true;
+                if (!this.levelStarted) {
+                    this.levelStarted = true;
 
                     let counter = 3;
                     const handle = window.setInterval(() => {
@@ -74,7 +80,11 @@ class GameManager {
                         } else {
                             new FadingText('Listen!', windowWidth / 2 - 250, 0, 500, 200, 1000, drawTrigger).start();
 
-                            arduinoSequencer.
+                            this.levelSequence = arduinoSequencer.generateSequence(this.level);
+                            console.log("Level Sequence: " + this.levelSequence);
+                            this.userLevelSequence = [];
+
+                            window.setTimeout(() => { arduinoSequencer.playSequence(this.levelSequence) }, 1000);
 
                             window.clearInterval(handle);
                         }
@@ -82,45 +92,63 @@ class GameManager {
                 }
             }
         });
+
+        keyPressedTrigger.subscribe((key, _) => {
+            for (let i = 0; i < keyNotes.length; i++) {
+                if (keyNotes[i].key === key) {
+                    this.userLevelSequence.push(i);
+                    if (this.userLevelSequence.length >= this.levelSequence.length) {
+                        levelOver();
+                    }
+                    break;
+                }
+            }
+        });
+
+        const levelOver = () => {
+            const levelWon = this.userLevelSequence.every((userValue, i) => this.levelSequence[i] === userValue);
+            console.log("Level Won: " + levelWon);
+            this.levelStarted = false;
+            if (levelWon) {
+                new FadingText('Correct!', windowWidth / 2 - 250, windowHeight - 200, 500, 200, 3000, drawTrigger, 'green', 100).start();
+                this.level++;
+            } else {
+                new FadingText('Wrong!', windowWidth / 2 - 250, windowHeight - 200, 500, 200, 3000, drawTrigger, 'red', 100).start();
+                this.level = 1;
+            }
+        };
     }
 }
 
-class FadingText {
+class ArduinoSequencer {
     /**
-     * @param {string | number} text
-     * @param {number} x
-     * @param {number} y
-     * @param {number} w
-     * @param {number} h
-     * @param {number} fadeTime
-     * @param {Trigger} drawTrigger
+     * @param {{write: (arg0: number) => void;}} serial
+     * @param {number} noteCount
+     * @param {number} noteTimeout
      */
-    constructor(text, x, y, w, h, fadeTime, drawTrigger) {
-        this.text = text;
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        this.fadeTime = fadeTime;
-        this.drawTrigger = drawTrigger;
+    constructor(serial, noteCount, noteTimeout) {
+        this.serial = serial;
+        this.noteCount = noteCount;
+        this.noteTimeout = noteTimeout;
     }
-
-    start() {
-        let endTime = Date.now() + this.fadeTime;
-
-        const unsubDraw = this.drawTrigger.subscribe(() => {
-            push();
-
-            fill(255 * (1 - (endTime - Date.now()) / this.fadeTime));
-            textSize(50);
-            textAlign(CENTER, CENTER);
-            text(this.text, this.x, this.y, this.w, this.h);
-
-            pop();
-
-            if (Date.now() > endTime) {
-                unsubDraw();
+    generateSequence(length) {
+        const sequence = [];
+        for (let i = 0; i < length; i++) {
+            sequence.push(Math.floor(Math.random() * this.noteCount))
+        }
+        return sequence;
+    }
+    /**
+     * @param {number[]} sequence
+     */
+    playSequence(sequence) {
+        let i = 0;
+        const handle = window.setInterval(() => {
+            this.serial.write(sequence[i]);
+            i++;
+            if (i > sequence.length) {
+                window.clearInterval(handle);
             }
-        });
+        }, this.noteTimeout);
     }
 }
