@@ -4,8 +4,9 @@ class GameManager {
      * @param {Trigger} keyPressedTrigger
      * @param {ArduinoSequencer} arduinoSequencer
      * @param {{ key: string; note: string; }[]} keyNotes
+     * @param {Piano} piano
      */
-    constructor(drawTrigger, keyPressedTrigger, arduinoSequencer, keyNotes) {
+    constructor(drawTrigger, keyPressedTrigger, arduinoSequencer, keyNotes, piano) {
         this.level = 1;
         this.levelStarted = false;
         /** @type {number[]} */
@@ -34,10 +35,15 @@ class GameManager {
                         }
                         else {
                             new FadingText('Listen!', windowWidth / 2 - 250, 0, 500, 200, 1000, drawTrigger).start();
-                            this.levelSequence = arduinoSequencer.generateSequence(this.level);
-                            console.log("Level Sequence: " + this.levelSequence);
+                            this.levelSequence = arduinoSequencer.generateSequence(2 + this.level / 3);//this.level);
+                            console.log("Level Sequence: " + this.levelSequence.map(i => i + 1));
                             this.userLevelSequence = [];
-                            window.setTimeout(() => { arduinoSequencer.playSequence(this.levelSequence); }, 1000);
+                            window.setTimeout(() => {
+                                arduinoSequencer.playSequence(this.levelSequence, i => {
+                                    piano.keys[i].darken();
+                                    piano.keys[i].setNewColor()
+                                });
+                            }, 1000);
                             window.clearInterval(handle);
                         }
                     }, 1000);
@@ -45,13 +51,15 @@ class GameManager {
             }
         });
         keyPressedTrigger.subscribe((key, _) => {
-            for (let i = 0; i < keyNotes.length; i++) {
-                if (keyNotes[i].key === key) {
-                    this.userLevelSequence.push(i);
-                    if (this.userLevelSequence.length >= this.levelSequence.length) {
-                        levelOver();
+            if (this.levelStarted) {
+                for (let i = 0; i < keyNotes.length; i++) {
+                    if (keyNotes[i].key === key) {
+                        this.userLevelSequence.push(i);
+                        if (this.userLevelSequence.length >= this.levelSequence.length) {
+                            window.setTimeout(levelOver, 250);
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         });
@@ -61,10 +69,12 @@ class GameManager {
             this.levelStarted = false;
             if (levelWon) {
                 new FadingText('Correct!', windowWidth / 2 - 250, windowHeight - 200, 500, 200, 3000, drawTrigger, 'green', 100).start();
+                arduinoSequencer.playWinTone();
                 this.level++;
             }
             else {
                 new FadingText('Wrong!', windowWidth / 2 - 250, windowHeight - 200, 500, 200, 3000, drawTrigger, 'red', 100).start();
+                arduinoSequencer.playLossTone();
                 this.level = 1;
             }
         };

@@ -1,6 +1,6 @@
 class ArduinoSequencer {
     /**
-     * @param {{write: (arg0: number) => void;}} serial
+     * @param {{write: (arg0: number | string) => void;}} serial
      * @param {number} noteCount
      * @param {number} noteTimeout
      */
@@ -18,15 +18,25 @@ class ArduinoSequencer {
     }
     /**
      * @param {number[]} sequence
+     * @param {(arg0: number) => void} callback
      */
-    playSequence(sequence) {
+    playSequence(sequence, callback) {
         let i = 0;
         const handle = window.setInterval(() => {
+            if (callback) {
+                callback(sequence[i]);
+            }
             this.serial.write(sequence[i]);
             i++;
-            if (i > sequence.length) {
+            if (i >= sequence.length) {
                 window.clearInterval(handle);
             }
         }, this.noteTimeout);
+    }
+    playWinTone() {
+        this.serial.write('W');
+    }
+    playLossTone() {
+        this.serial.write('L');
     }
 }

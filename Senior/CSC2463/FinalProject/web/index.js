@@ -1,8 +1,9 @@
-let piano;
 const portName = 'COM3';
 // @ts-ignore
 const serial = new p5.SerialPort();
+let piano;
 let arduinoSequencer;
+let gameManager;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -18,12 +19,14 @@ function setup() {
     ];
     piano = new Piano(windowWidth / 2 - w / 2, windowHeight / 2 - h / 2, w, h, keyNotes, drawTrigger, keyPressedTrigger);
     arduinoSequencer = new ArduinoSequencer(serial, keyNotes.length, 500);
-    new GameManager(drawTrigger, keyPressedTrigger, arduinoSequencer, keyNotes);
+    gameManager = new GameManager(drawTrigger, keyPressedTrigger, arduinoSequencer, keyNotes, piano);
 
     serial.open(portName);
     serial.on('data', () => {
         const data = serial.read();
-        if (data >= 0 && data < keyNotes.length) {
+        if (data[0] === 'P') {
+            console.log(data);
+        } else if (data >= 0 && data < keyNotes.length) {
             keyPressedTrigger.trigger(keyNotes[data].key);
         }
     });
