@@ -8,6 +8,8 @@ const int buzzer = 11;
 int buttonStates[buttonCount] = {LOW, LOW, LOW, LOW, LOW};
 unsigned long buttonTimeouts[buttonCount] = {0, 0, 0, 0, 0};
 
+const int photoCell = 0;
+
 void setup() {
   Serial.begin(9600);
   for (int i = 0; i < buttonCount; i++) {
@@ -19,7 +21,7 @@ void loop() {
   for (int i = 0; i < buttonCount; i++) {
     int buttonValue = digitalRead(buttons[i]);
     if (buttonValue == HIGH && buttonValue != buttonStates[i] && millis() - buttonTimeouts[i] >= buttonTimeout) {
-      Serial.write(i);
+      Serial.println(i);
       delay(100);
       buttonStates[i] = buttonValue;
       buttonTimeouts[i] = millis();
@@ -44,7 +46,8 @@ void loop() {
     }
   }
 
-//  Serial.write('P' + analogRead(5));
+  Serial.print("P");
+  Serial.println(analogRead(photoCell));
 }
 
 void playLossTone() {

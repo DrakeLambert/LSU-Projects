@@ -5,6 +5,8 @@ let piano;
 let arduinoSequencer;
 let gameManager;
 
+let backgroundColor = 0;
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
@@ -23,18 +25,24 @@ function setup() {
 
     serial.open(portName);
     serial.on('data', () => {
-        const data = serial.read();
+        const data = serial.readStringUntil('\n');
+        const dataAsNumber = Number(data);
+        if (data.length === 0) {
+            return;
+        }
         if (data[0] === 'P') {
+            backgroundColor = Number(data.slice(1));
+        } else if (dataAsNumber >= 0 && dataAsNumber < keyNotes.length) {
+            keyPressedTrigger.trigger(keyNotes[dataAsNumber].key);
+        } else {
             console.log(data);
-        } else if (data >= 0 && data < keyNotes.length) {
-            keyPressedTrigger.trigger(keyNotes[data].key);
         }
     });
 }
 
 const drawTrigger = new Trigger();
 function draw() {
-    background('white');
+    background(backgroundColor);
     drawTrigger.trigger();
 }
 
